@@ -13,7 +13,7 @@ plugins {
 }
 
 android {
-    namespace = "com.carapacik.reactiontest"
+    namespace = "com.carapacik.fightclub"
     compileSdk = 36
     ndkVersion = "28.1.13356709"
 

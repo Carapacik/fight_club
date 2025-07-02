@@ -25,10 +25,11 @@ class _MainPageContent extends StatefulWidget {
 class __MainPageContentState extends State<_MainPageContent> {
   late final _future = _getLastResult();
 
-  Future<String> _getLastResult() async {
+  Future<String?> _getLastResult() async {
     final sp = SharedPreferencesAsync();
     final r = await sp.getString('last_fight_result');
-    return r ?? '';
+
+    return r;
   }
 
   @override
@@ -49,13 +50,17 @@ class __MainPageContentState extends State<_MainPageContent> {
                 ),
               ),
               const Spacer(),
-              FutureBuilder<String>(
+              FutureBuilder<String?>(
                 future: _future,
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return const SizedBox.shrink();
                   }
-                  final fightResult = FightResult.getByName(snapshot.requireData);
+                  final result = snapshot.requireData;
+                  if (result == null) {
+                    return const SizedBox.shrink();
+                  }
+                  final fightResult = FightResult.getByName(result);
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
