@@ -11,12 +11,9 @@ enum FightResult {
   final String result;
   final Color color;
 
-  static FightResult getByName(final String name) => values.firstWhere((fightResult) => fightResult.result == name);
+  static FightResult getByName(String name) => values.firstWhere((fightResult) => fightResult.result == name);
 
-  static FightResult? calculateResult(
-    final int youLives,
-    final int enemyLives,
-  ) {
+  static FightResult? calculateResult(int youLives, int enemyLives) {
     if (youLives == 0 && enemyLives == 0) {
       return draw;
     } else if (youLives == 0) {

@@ -7,9 +7,9 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(textTheme: GoogleFonts.pressStart2pTextTheme()),
-        title: 'Fight club',
-        home: const MainPage(),
-      );
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(textTheme: GoogleFonts.pressStart2pTextTheme()),
+    title: 'Fight club',
+    home: const MainPage(),
+  );
 }

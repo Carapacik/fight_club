@@ -6,82 +6,71 @@ import 'package:fightclub/widgets/secondary_action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class StatisticsPage extends StatelessWidget {
+class StatisticsPage extends StatefulWidget {
   const StatisticsPage({super.key});
 
-  Future<SharedPreferences> get _getSp => SharedPreferences.getInstance();
+  @override
+  State<StatisticsPage> createState() => _StatisticsPageState();
+}
+
+class _StatisticsPageState extends State<StatisticsPage> {
+  late final _future = _getStats();
+
+  Future<({int won, int lost, int draw})> _getStats() async {
+    final sp = SharedPreferencesAsync();
+    final won = await sp.getInt('stats_won');
+    final lost = await sp.getInt('stats_lost');
+    final draw = await sp.getInt('stats_draw');
+    return (won: won ?? 0, lost: lost ?? 0, draw: draw ?? 0);
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: AppColors.background,
-        body: SafeArea(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 900),
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 24),
-                    child: const Text(
-                      'Statistics',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: AppColors.darkGreyText,
-                      ),
-                    ),
-                  ),
-                  const Expanded(child: SizedBox.shrink()),
-                  FutureBuilder<SharedPreferences>(
-                    future: _getSp,
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return const SizedBox.shrink();
-                      }
-                      final sp = snapshot.requireData;
-                      unawaited(appearReview());
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            "Won: ${sp.getInt("stats_won") ?? 0}",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: AppColors.darkGreyText,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            "Lost: ${sp.getInt("stats_lost") ?? 0}",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: AppColors.darkGreyText,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            "Draw: ${sp.getInt("stats_draw") ?? 0}",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: AppColors.darkGreyText,
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                  const Expanded(child: SizedBox.shrink()),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: SecondaryActionButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      text: 'Back',
-                    ),
-                  ),
-                ],
+    backgroundColor: AppColors.background,
+    body: SafeArea(
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 900),
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 24),
+                child: const Text(
+                  'Statistics',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 24, color: AppColors.darkGreyText),
+                ),
               ),
-            ),
+              const Expanded(child: SizedBox.shrink()),
+              FutureBuilder<({int won, int lost, int draw})>(
+                future: _future,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const SizedBox.shrink();
+                  }
+                  final stats = snapshot.requireData;
+                  unawaited(appearReview());
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Won: ${stats.won}', style: const TextStyle(fontSize: 16, color: AppColors.darkGreyText)),
+                      const SizedBox(height: 6),
+                      Text('Lost: ${stats.lost}', style: const TextStyle(fontSize: 16, color: AppColors.darkGreyText)),
+                      const SizedBox(height: 6),
+                      Text('Draw: ${stats.draw}', style: const TextStyle(fontSize: 16, color: AppColors.darkGreyText)),
+                    ],
+                  );
+                },
+              ),
+              const Expanded(child: SizedBox.shrink()),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: SecondaryActionButton(onTap: () => Navigator.of(context).pop(), text: 'Back'),
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    ),
+  );
 }
