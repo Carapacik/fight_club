@@ -14,13 +14,13 @@ class StatisticsPage extends StatefulWidget {
 }
 
 class _StatisticsPageState extends State<StatisticsPage> {
-  late final _future = _getStats();
+  late final Future<({int draw, int lost, int won})> _future = _getStats();
 
   Future<({int won, int lost, int draw})> _getStats() async {
     final sp = SharedPreferencesAsync();
-    final won = await sp.getInt('stats_won');
-    final lost = await sp.getInt('stats_lost');
-    final draw = await sp.getInt('stats_draw');
+    final int? won = await sp.getInt('stats_won');
+    final int? lost = await sp.getInt('stats_lost');
+    final int? draw = await sp.getInt('stats_draw');
     return (won: won ?? 0, lost: lost ?? 0, draw: draw ?? 0);
   }
 
@@ -48,7 +48,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                   if (!snapshot.hasData) {
                     return const SizedBox.shrink();
                   }
-                  final stats = snapshot.requireData;
+                  final ({int draw, int lost, int won}) stats = snapshot.requireData;
                   unawaited(appearReview());
                   return Column(
                     mainAxisSize: MainAxisSize.min,

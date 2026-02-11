@@ -102,7 +102,7 @@ class FightPageState extends State<FightPage> {
           _youLives--;
         }
 
-        final fightResult = FightResult.calculateResult(_youLives, _enemyLives);
+        final FightResult? fightResult = FightResult.calculateResult(_youLives, _enemyLives);
         if (fightResult != null) {
           unawaited(_saveFightResult(fightResult));
         }
@@ -121,7 +121,7 @@ class FightPageState extends State<FightPage> {
     final sp = SharedPreferencesAsync();
     await sp.setString('last_fight_result', fightResult.result);
     final key = 'stats_${fightResult.result.toLowerCase()}';
-    final currentValue = await sp.getInt(key);
+    final int? currentValue = await sp.getInt(key);
     await sp.setInt(key, (currentValue ?? 0) + 1);
   }
 

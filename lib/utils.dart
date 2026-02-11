@@ -8,7 +8,7 @@ Future<void> appearReview() async {
     return;
   }
   if (Platform.isAndroid || Platform.isIOS || Platform.isMacOS) {
-    final inAppReview = InAppReview.instance;
+    final InAppReview inAppReview = InAppReview.instance;
     if (await inAppReview.isAvailable()) {
       await inAppReview.requestReview();
     }
